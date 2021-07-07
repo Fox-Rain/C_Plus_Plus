@@ -1,3 +1,179 @@
+< 04 복합 데이터형 >
+
+( 04.1 배열 )
+
+배열은 데이터형이 같은 여러개의 값을 연속적으로 저장하는 데이터 구조이다.  컴퓨터는 이 원소들을 메모리에 "연속적"으로 배치한다.
+
+배열 선언의 일반적인 형식      typeName arrayName [arraysize];   ***  arraysize는 컴파일타임에 결정되는 값이어야 한다. Ex) 10, const 상수 등...
+
+배열은 인덱싱을 통해서 각각의 원소에 한번에 접근 할 수 있다는 장점이 있다.
+
+
+
+( 04.2 문자열 )
+
+* C 스타일 문자열
+    
+    *** 모든문자열의 마지막 문자는 반드시 '\0' null character여야 한다.   '\0'은 ASCII코드가 0인 문자이다.     '\0'은 문자열의 끝을 표시한다.  (맨뒤에 '\0'이 있어야만 문자열이다.)
+                                                                                                           cout등 많은 문자열 처리함수가 널문자를 만날때까지 문자열을 처리하는것으로 설정이 많이 되어있기 때문
+
+    char ch1[] = "hello";      <--- *** " "로 초기화를 하면  " "으로 싸진 문자들을 순차적으로 배열에 넣고 마지막에 '\0'까지 알아서 넣어준다.
+
+    char ch2[100] = "hello";   <--- *** 만약 " "로 싸여진 문자들보다 배열의 크기가 클 경우, 남은 배열의 원소에 모두 '\0'을 넣는다.   h e l l o \0 \0 \0 \0 \0 \0 \0 \0 .....
+
+    "s"  vs  's'               <--- *** " "은 문자열이기에 '\0'을 묵시적으로 뒤에 넣어주나,  ' '은 문자이기에 '\0'가 들어가지 않는다.  "s"는 크기가 2bytes   's'는 크기가 1byte만 차지하게 된다.
+                                    *** 또한 " "는 내부적으로 주소를 나타내므로, char[] 배열로 받아주어야 한다.
+    
+    strlen()                   <--- *** strlen()은 ()안의 문자열에서 문자의 개수를 리턴한다. ( '\0'의 개수는 세지않고 리턴함 )
+
+    *** cin의 주의점            <--- *** 키보드를 통해 문자를 입력받을 경우 '\0'을 입력받지 못하기 때문에 빈칸,탭,엔터등이 들어오게 되면 문자열이 끝나는 것으로 간주하는 특성이 있다.  따라서 cin만으로는 빈칸을 받을 수 없다.
+                                    *** cin은 키보드로 입력받다가 빈칸,텝,엔터등을 만나면 읽는것을 종료한뒤 뒤에 '\0'을 붙여서 저장한다. ******* cin은 개행문자를 남긴다. ******
+                                    *** cin은 입력을 받은뒤에 cin객체를 다시 리턴한다 ---> 연쇄적인 호출이 가능함
+
+* 한번에 행 단위로 입력받기
+
+    * getline()
+
+        cin.getline(char_arr,count,);    <--- *** cin.getline()은 입력받을 배열과 문자를 몇개까지 받을지를 인자로 받는다 + 로 마지막에 어떤 문자를 개행문자로 할지까지 정할 수 있다. (default '\n')
+                                         <--- *** 즉, getline()은 count-1개의 문자를 받게되거나, '\n'을 만나거나 둘중의 하나의 조건이 완료되면 읽어들이기를 종료하고 '\0'을 뒤에 넣은뒤 저장한다.
+                                         <--- *** 또한 getline()은 개행문자를 만나서 종료될 경우, 개행문자를 읽어들인뒤 버려서 없앤다.
+        
+
+    * get()
+        
+        cin.get(char_arr,count);         <--- *** getline과 똑같이 동작하나  하나의 점이 다르다. 개행문자를 만나서 종료될 경우 개행문자는 놔두고 그 앞까지만 저장한다는 점이다.
+        cin.get()                        <--- *** 따라서 그 개행문자를 지우기 위해서 cin.get()을 사용하기도 한다. cin.get()의 기능은 무엇이던간에 첫 문자를 읽는 기능을 한다.
+
+
+    * 연쇄호출
+
+        getline(), get() 둘다 cin객체를 리턴하므로,  E)  cin.get(name1,20).get(name2,20);   이런식으로 연쇄적으로 받을 수 있다.
+
+
+
+
+( 04.3 string 클래스 )
+
+* string이 C 스타일 문자열과 다른 점                  <<< 일단, string 은 마지막에 '\0'문자를 넣지 않는다. >>>
+    
+    string str1;
+    string str2;
+
+    str1=str2;     <--- 이런식으로 스트링에 스트링을 대입해 줄 수 있다.  (c스타일은 불가)
+
+    str1+=str2;    <--- 이런식으로 string은 +-연산이 가능하다.
+
+
+* string을 통해 한 행 단위로 입력 받는법
+
+    getline(cin,str);    getline(입력을 찾을곳, 입력을 저장할 string);         <--- #include<string>
+
+
+
+
+( 04.4 구조체 )
+
+구조체란 >>> 여러관련된 정보들을 하나로 모아서 저장할 수 있는 구조를 말한다.   Ex) 자동차라고 한다면  차체, 바퀴, 창문, 엔진 ..     하나의 구조체안에 여러가지의 데이터를 저장할 수 있으므로, 배열보다 융통성이 크다.
+
+*** 구조체도 같은 구조체를 통해서 만들어진 객체끼리는 대입이 가능하다.
+
+struct st
+{
+    int x;
+    double y;
+};
+
+int main()
+{
+    st s1{2, 3.14};
+    st s2{1, 5.3};
+
+    s2 = s1;     <--- 이런식으로 같은 struct를 통해 만들어진 객체끼리는 대입도 가능하다.
+
+    return 0;
+}
+
+
+
+( 04.5 공용체 )
+
+공용체(union)은 서로다른 데이터를 한번에 한가지만 보관할 수 있는 데이터 타입이다.  (카멜레온이라고 생각하면 됨..)
+
+*** 공요체는 가변적으로 1개의 데이터만 보관할 수 있기 때문에 "공용체의 크기는 공용체의 데이터타입중 가장 큰것의 크기와 같다."
+
+Ex)
+    union one4all
+    {
+        int int_value;
+        double double_value;
+        string string_value;
+    }
+
+    int main()
+    {
+        one4all hi;             // 유니온 객체 hi 선언
+
+        hi.int_value = 3;       // int_value 멤버에 3 대입   int형으로 쓰임
+
+        hi.double_value = 3.14; // double_value에 3.14 대입  전에 대입되었던 int_value값은 사라진다.  ... 이런식으로 데이터를 한가지만 보관하고 있을 수 있다.  
+
+        return 0;
+    }
+
+
+
+( 04.6 열거체 enum )
+
+열거체 enum은 const를 사용하여 기호상수를 만드는 것에 대해 또다른 발판을 제공한다.
+
+*** 또한 열거체는 산술연산자는 허용되지 않고, 대입연산자만 허용된다.   +- 불가능
+
+    #include<iostream>
+
+    using namespace std;
+
+    enum Rainbow
+    {                            enum멤버가 default 일경우 0부터 +1이 계속된다.
+	    Red,                     // 0
+	    Orange,                  // 1
+	    Yellow = 123,            // *** 이런식으로 따로 초기화 할수도 있다. 123
+	    Green,                   // *** 이후부턴 다시 +1 하여서 124
+	    Blue,                    // 125
+	    violet,                  // 126
+	    ultraviolet              // 127
+    };
+
+    int main()
+    {
+	    Rainbow R;               // enum class Rainbow의 객체 R 선언
+	    R = Yellow;              // *** enum객체에는 무조건 enum클래스의 멤버만 대입할 수 있다.
+
+
+        // *** enum class의 대입 *** //
+        
+        int color = Red;         // *** enum class의 멤버들은 int형이므로 int형 변수에 넣을 수 있다.    enum 멤버 ---> int형 변수 (o)
+        
+        R = 3;                   // *** 역은 성립하지 않는다.  int value ---> enum 멤버 (x)
+
+	    return 0;
+    }
+
+
+* 열거체의 값 범위
+    
+    #include<iostrea>
+
+    enum bits {one=1, two=2, eight=8};       <--- *** enum의 값 범위를 구하는 것은 (P.178)
+
+    int main()
+    {
+        bits my_bit;  // my_bit 선언
+        
+        my_bit = bits(6); // 대입   <--- *** 6의 값을 갖는 멤버는 없지만  맞다.  bits의 범위안에 6이 들어있기 때문이다.
+
+        return 0;
+    }
+
 < 09 메모리 모델과 이름공간(namespace) >
 
 ( 09.1 분할 컴파일 )
@@ -108,22 +284,162 @@ C++는 네가지 유형으로 데이터를 저장한다.
                 int main()
                 {}
                 
-                                    
+                다른 파일에서 전역(global)변수를 사용할 경우
+                
+                extern int g_value;     g_value는 다른지역에서 정의되어있다는 의미
+          
+                
 
     * 쓰레드 존속 시간
     
     * 동적 기억 존속 시간
         new를 통한 동적할당된 메모리는 delete 또는 프로그램이 종료할 때 까지 존속한다.
+
+        
+        int *ptr = new int [10];     <--- new int [10]  40bytes를 메모리에 할당한다.
+
+        delete[] ptr;                  <--- 할당한 40bytes를 메모리에서 제거한다.    *** 단, ptr 즉, 포인터변수는 선언되어있는 scope를 나가지 않는한 존재한다.   ptr에 또다른 메모리 주소를 대입할 수 있음
+        (배열이 아닌 하나의 변수가 동적할당됬을땐  delete를 이용함)
+
+        * new연산자를 이용한 초기화
+            
+            double *pi = new double (3.14);            <--- pi가 가르키는 곳에 3.14 double형 변수를 저장함
+
+            
+            struct st
+            {
+                int x;
+                string name;
+            };
+
+            struct *st = new st {x_value,name_value};  <--- 이런식으로 new 연산자를 통해서 구조체도 초기화 할 수 있다.
+
+
+        * 위치지정 new 연산자
+            
+            #include<iostream>
+            #include<new>         <<< 위치지정 new연산자를 사용하기위해서 include
+
+            using namespace std;
+
+            struct st
+            {
+	            int x;
+	            string name;
+            };
+
+            int main()
+            {
+	            char buffer1[50];
+	            char buffer2[500];
+
+	            st *s1;
+
+	            int *int3;                        ***** 위치지정 new를 이용하는것은 자동변수들의 위치(힙x)에 메모리를 쓰기 때문에 동적할당이 아니다.   따라서 delete를 사용할 수 없다. ******
+
+	            s1 = new(buffer1)st;               <--- buffer1배열의 위치에 메모리를 사용하여 st를 저장함
+
+	            int3 = new(buffer2)int[20];        <--- buffer2배열의 위치에 메모리를 사용하여 int[20]만큼 저장함
+	
+	            cout << s1 <<" " <<&buffer1<< endl;        // 같다
+
+	            cout << int3 << " " << &buffer2 << endl;   // 같다
+
+	            return 0;
+            }
 }
 
 
+* 제한자     (기억 공간 제한자)
 
+    ( Cv-제한자 )
+        cv는 const, volatile 을 말한다.    const는 한번 메모리에 초기화되면 그 메모리를 변경할 수 없다는 의미이다.    volatile는 프로그램코드가 변경하지 않더라도, 특정메모리의  값이 변경될 수 있다는 것이다. (Ex)하드웨어로 인한 메모리 수정등)
+     
 
-
+    static
+    extern
+    thread_local    <--- *** thread_local은 static 또는 extern과 함께 쓰일 수 있다.    thread_local은 변수 존속 시간을 쓰레드의 존속 시간과 같게 만든다.
+    mutable         <--- *** const로 막힌 구조체(클래스)에서도 멤버를 mutable로 선언했다면 수정을 할 수 있다.
     
+    Ex) mutable
+
+        struct A
+        {
+            mutablee int x;
+        };
+
+        int main()
+        {
+            const A a;
+
+            a.x=3;       <--- *** 분명 객체 a를 const로 고정했지만, a객체 내의 mutable변수는 수정을 할 수 있다.
+
+            return 0;
+        }
+
+
+        tip) const로 전역변수를 막게되면,  전역변수임에도 불구하고, 그 파일 내에서만 이용이 가능하다. (const static처럼 쓰임)
+
+
+
+
+( 09.3 이름공간(namespace))
+    
+    // 아래처럼 namespace을 이용하게 되면 같은 이름의 변수를 한 파일안에서 여러개를 사용할 수 있다.
+    // A::x  B::x는 각각 다른 변수로 저장된다.
+
+    #include<iostream>
+
+    namespace A
+    {
+        int x;
+        void func(){}
+    }
+
+    namespace B
+    {
+        int x;
+        void func(){}
+    }
+
+    int main()
+    {   
+        A:: x = 1;   // namespace A의 x를 의미
+
+        B:: x = 2;   // namespace B의 x를 의미
+
+        return 0;
+    }
+
+
+    * using 선언과 using 지시자
         
 
+        (using 선언)
 
+        #include<iostream>
+
+        namespace A
+        {
+            int x;
+        }
+
+        int main()        
+        {
+            using A::x;        <--- *** using namespace명:: 원하는데이터(or 함수등)      즉, 이 예제에서는 namespace A에 있는 x 변수를  main()함수에 알아서 추가하여 컴파일한다.  따라서 그냥 x를 통해서 접근이 가능해지는 것
+                                    *** main()안에 x를 만드는것으로 작동하기 때문에 따로 main()함수에 x를 선언할 수 없게 된다는 점을 유의하자.
+            int x = 3;         <--- *** 불가능함
+
+            return 0;
+        }
+
+
+
+        (using 지시자)
+
+        using namespace A;
+
+        *** A안의 모든 변수, 함수등을 A:: 없이 사용할 수있음    namespace도 마찬가지로 A의 내부에 있는 것들을 main()함수에 추가하는 식으로 작동하기에  main()함수안에 namespace A의 변수, 함수와 같은 이름은 선언할 수 없다
 
 
 
